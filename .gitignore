@@ -1,0 +1,10 @@
+.venv
+venv/
+venv
+listings.csv
+*.csv
+listings.csv
+Airbnb_Listing_prediction.ipynb
+__pycache__
+*.pyc
+images/
