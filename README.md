@@ -21,7 +21,7 @@ We performed a thorough EDA to understand data characteristics and guide feature
 
 ### Missing value treatment
 
-* Handled missing values in `price`, `last_review`, `reviews_per_month`.
+* Handled missing values in `price`, `last_review`, and `reviews_per_month`.
 
 ### Distribution analysis and outlier handling
 
@@ -31,7 +31,7 @@ We performed a thorough EDA to understand data characteristics and guide feature
 ### Correlation analysis
 
 * No strong linear correlation with `log_price`.
-* Strong correlations among review-related metrics (`number_of_reviews`, `reviews_per_month`, `number_of_reviews_ltm`).
+* Strong correlations among review-related metrics (`number_of_reviews`, `reviews_per_month`, etc.).
 
 ---
 
@@ -68,29 +68,34 @@ Multiple regression models were evaluated:
 
 ---
 
-Deployment
-Export
-Complete preprocessing pipeline (including scaler, encoder, and engineered features) saved together with the model using joblib.
+## Deployment
 
-API
-Built using FastAPI.
+### Export
 
-Accepts JSON payload and returns a predicted price.
+* Complete preprocessing pipeline (including scaler, encoder, and engineered features) saved together with the model using joblib.
 
-Web App
-Developed using Streamlit.
+### API
 
-Interactive UI to input listing details and receive predicted prices.
+* Built using **FastAPI**.
+* Accepts JSON payload and returns a predicted price.
 
-Containerization
-Full application containerized using Docker.
+### Web App
 
-Streamlit app and FastAPI run inside the same container for seamless deployment.
+* Developed using **Streamlit**.
+* Interactive UI to input listing details and receive predicted prices.
 
-Running Locally
-bash
-Copy
-Edit
+---
+
+## Containerization
+
+* Full application containerized using Docker.
+* Streamlit app and FastAPI run inside the same container for seamless deployment.
+
+---
+
+## Running Locally
+
+```bash
 # Create and activate virtual environment
 python -m venv venv
 source venv/bin/activate  # On Windows: venv\Scripts\activate
@@ -103,31 +108,46 @@ python main.py
 
 # Run Streamlit app
 streamlit run streamlit_app.py
-Docker Usage
-bash
-Copy
-Edit
+```
+
+---
+
+## Docker Usage
+
+```bash
 docker pull batman21/airbnb-app:latest
 docker run -p 8501:8501 batman21/airbnb-app
+```
+
 Then visit:
 
-Streamlit app: http://localhost:8501
+* Streamlit app: [http://localhost:8501](http://localhost:8501)
 
-Deployment on Railway
-The application is also deployed using Railway's Docker container service.
+---
 
-Running at: airbnb-app-production-5063.up.railway.app
+## Deployment on Railway
 
-Monitoring
-Prometheus used to scrape metrics from the app endpoints.
+* The application is also deployed using **Railway's Docker container service** (manual image deployment).
+* Running at: [https://airbnb-app-production-5063.up.railway.app](https://airbnb-app-production-5063.up.railway.app)
 
-Grafana configured to visualize real-time metrics (e.g., API response times, scrape duration, request errors).
+---
 
-Dockerized setup for Prometheus and Grafana to keep them portable and reproducible.
+## Monitoring
 
-Docker Image
-Docker Hub — batman21/airbnb-app
+* **Prometheus** used to scrape metrics from app endpoints.
+* **Grafana** configured to visualize real-time metrics (e.g., API response times, scrape duration, request errors).
+* Dockerized setup for Prometheus and Grafana to keep them portable and reproducible.
 
-Author
+---
+
+## Docker Image
+
+[**Docker Hub — batman21/airbnb-app**](https://hub.docker.com/r/batman21/airbnb-app)
+
+---
+
+## Author
+
 Adarsh
 
+---
