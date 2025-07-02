@@ -1,7 +1,7 @@
 from fastapi import FastAPI
 import joblib
 import pandas as pd
-
+from prometheus_fastapi_instrumentator import Instrumentator
 # Load pipeline
 pipeline = joblib.load("model.pkl")
 
@@ -17,3 +17,6 @@ def predict(data: dict):
     df = pd.DataFrame([data])
     prediction = pipeline.predict(df)[0]
     return {"predicted_log_price": prediction}
+
+instrumentator = Instrumentator()
+instrumentator.instrument(app).expose(app)
