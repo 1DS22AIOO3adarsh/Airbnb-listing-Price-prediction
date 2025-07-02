@@ -3,135 +3,131 @@
 
 ## Overview
 
-This project aims to predict the listing price of Airbnb properties using advanced machine learning techniques. The solution helps hosts estimate competitive prices for their listings based on property details and activity data.
+This project predicts Airbnb listing prices using advanced machine learning techniques. It helps hosts determine competitive prices for their properties based on listing attributes and activity data.
 
 ---
 
 ## Dataset
 
 * **Source:** Airbnb listings dataset
-* **Size:** 447 rows, 16 columns after cleaning
-* **Target variable:** `price` (transformed using log)
+* **Final size after cleaning:** 447 rows, 16 columns
+* **Target variable:** `price` (log-transformed)
 
 ---
 
 ## Exploratory Data Analysis (EDA)
 
-We performed a thorough EDA to understand data distribution and relationships:
+We performed a thorough EDA to understand data characteristics and guide feature engineering.
 
-* **Missing value treatment:**
+### Missing value treatment
 
-  * Handled missing `price`, `last_review`, `reviews_per_month`
-* **Feature distributions & outlier handling:**
+* Handled missing values in `price`, `last_review`, `reviews_per_month`.
 
-  * Log transformation and capping on `price`
-  * Filtered extreme `minimum_nights` (>30 nights)
-* **Correlation analysis:**
+### Distribution analysis and outlier handling
 
-  * No strong correlation with price; review metrics highly correlated among themselves
-* **Feature engineering:**
+* Applied log transformation on `price` to reduce skewness.
+* Removed listings with `minimum_nights` > 30 to exclude extreme cases.
 
-  * `log_price`
-  * `reviews_density` = reviews per month / availability
-  * `price_per_min_night` = price / minimum nights
-  * `is_professional_host` (binary)
-  * `days_since_last_review`
-  * `popularity_score`
+### Correlation analysis
+
+* No strong linear correlation with `log_price`.
+* Strong correlations among review-related metrics (`number_of_reviews`, `reviews_per_month`, `number_of_reviews_ltm`).
 
 ---
 
 ## Feature Engineering
 
-We engineered new features to capture useful patterns:
+New features were created to improve prediction performance:
 
-* **Log-transformed price** for stable modeling
-* **Price per minimum night** as a relative cost indicator
-* **Host professional flag** to separate large hosts
-* **Review recency metrics**
+* `log_price`: Log-transformed price for variance stabilization.
+* `reviews_density`: Reviews per month normalized by availability.
+* `price_per_min_night`: Price divided by minimum nights.
+* `is_professional_host`: Flag indicating if a host manages more than 3 listings.
+* `days_since_last_review`: Number of days since the most recent review.
+* `popularity_score`: Composite score combining activity and recency.
 
 ---
 
 ## Modeling
 
-We evaluated multiple regression models:
+Multiple regression models were evaluated:
 
-| Model             | RMSE     | R²       |
-| ----------------- | -------- | -------- |
-| Linear Regression | 0.33     | 0.43     |
-| Decision Tree     | 0.32     | 0.47     |
-| Random Forest     | 0.23     | 0.73     |
-| Gradient Boosting | **0.17** | **0.85** |
+| Model             | RMSE | R²   |
+| ----------------- | ---- | ---- |
+| Linear Regression | 0.33 | 0.43 |
+| Decision Tree     | 0.32 | 0.47 |
+| Random Forest     | 0.23 | 0.73 |
+| Gradient Boosting | 0.17 | 0.85 |
 
-We finally selected **Gradient Boosting Regressor** and fine-tuned using GridSearchCV, achieving:
+### Final Model
 
+* **Chosen model:** Gradient Boosting Regressor
+* **Tuned using:** GridSearchCV
 * **Best Test RMSE:** 0.15
 * **Best Test R²:** 0.89
 
 ---
 
-## Deployment
+Deployment
+Export
+Complete preprocessing pipeline (including scaler, encoder, and engineered features) saved together with the model using joblib.
 
-The final model is exported along with its full preprocessing pipeline (including scaler and encoder).
+API
+Built using FastAPI.
 
-### API
+Accepts JSON payload and returns a predicted price.
 
-* Implemented using **FastAPI** to serve predictions.
-* Supports JSON input and returns price prediction.
+Web App
+Developed using Streamlit.
 
-### Web App
+Interactive UI to input listing details and receive predicted prices.
 
-* Built using **Streamlit**.
-* Simple and interactive UI to input listing details and get predicted price.
+Containerization
+Full application containerized using Docker.
 
----
+Streamlit app and FastAPI run inside the same container for seamless deployment.
 
-## Containerization
-
-* Entire app containerized using Docker.
-* Streamlit app and API run in the same container for seamless deployment.
-
----
-
-## Running Locally
-
-```bash
-# Create virtual environment
+Running Locally
+bash
+Copy
+Edit
+# Create and activate virtual environment
 python -m venv venv
-source venv/bin/activate  # or venv\Scripts\activate on Windows
+source venv/bin/activate  # On Windows: venv\Scripts\activate
 
 # Install dependencies
 pip install -r requirements.txt
 
-# Run FastAPI and Streamlit (entrypoint script)
+# Run API
 python main.py
+
+# Run Streamlit app
 streamlit run streamlit_app.py
-```
-
----
-
-## Docker
-
-Pull and run from Docker Hub:
-
-```bash
+Docker Usage
+bash
+Copy
+Edit
 docker pull batman21/airbnb-app:latest
 docker run -p 8501:8501 batman21/airbnb-app
-```
+Then visit:
 
-Then, visit:
+Streamlit app: http://localhost:8501
 
-* Streamlit app: [http://localhost:8501](http://localhost:8501)
+Deployment on Railway
+The application is also deployed using Railway's Docker container service.
 
----
+Running at: airbnb-app-production-5063.up.railway.app
 
-## 🚀 Docker Image
+Monitoring
+Prometheus used to scrape metrics from the app endpoints.
 
-[**Docker Hub Link**](https://hub.docker.com/r/batman21/airbnb-app)
+Grafana configured to visualize real-time metrics (e.g., API response times, scrape duration, request errors).
 
----
+Dockerized setup for Prometheus and Grafana to keep them portable and reproducible.
 
-## Author
+Docker Image
+Docker Hub — batman21/airbnb-app
 
+Author
 Adarsh
 
----
